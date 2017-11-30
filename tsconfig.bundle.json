@@ -8,7 +8,6 @@
         "outDir": ".tmp/esm",
         "rootDir": ".",
         "sourceMap": true,
-        "sourceRoot": "bundles/src",
         "removeComments": false,
         "moduleResolution": "node",
         "declaration": true,
