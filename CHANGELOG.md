@@ -1,13 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 2.0.0 (2017-11-24)
+## 2.0.0 (2017-11-30)
 
 ### Breaking changes
- - Angular version support changed to 5.x.x
+ - Angular version support changed to 4.4.6
  - Use rxjs 5.5 lettable operators
 
-## 2.0.0-beta.1 (2017-09-24)
+## 2.0.0-beta.1
 
 ### Breaking changes
 - Use Angular 4 `HttpClient`

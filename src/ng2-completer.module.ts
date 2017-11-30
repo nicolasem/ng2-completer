@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { CompleterCmp } from "./components/completer-cmp";
@@ -11,12 +11,6 @@ import { CtrInput } from "./directives/ctr-input";
 import { CtrList } from "./directives/ctr-list";
 import { CtrRow } from "./directives/ctr-row";
 import { CommonModule } from "@angular/common";
-
-const providers = [
-    CompleterService,
-    LocalDataFactoryProvider,
-    RemoteDataFactoryProvider
-];
 
 @NgModule({
     imports: [
@@ -42,21 +36,10 @@ const providers = [
         CtrList,
         CtrRow
     ],
-    providers
+    providers: [
+        CompleterService,
+        LocalDataFactoryProvider,
+        RemoteDataFactoryProvider
+    ]
 })
-export class Ng2CompleterModule {
-
-    public static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: Ng2CompleterModule,
-            providers
-        };
-    }
-
-    public static forChild(): ModuleWithProviders {
-        return {
-            ngModule: Ng2CompleterModule,
-            providers
-        };
-    }
-}
+export class Ng2CompleterModule { }

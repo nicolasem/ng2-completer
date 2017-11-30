@@ -1,13 +1,14 @@
 {
     "compilerOptions": {
         "module": "es2015",
-        "target": "es2015",
+        "target": "ES5",
         "noImplicitAny": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "outDir": ".tmp/esm",
         "rootDir": ".",
         "sourceMap": true,
+        "sourceRoot": "bundles/src",
         "removeComments": false,
         "moduleResolution": "node",
         "declaration": true,
@@ -22,8 +23,7 @@
     "angularCompilerOptions": {
         "genDir": ".tmp",
         "debug": false,
-        "strictMetadataEmit": true,
-        "skipTemplateCodegen": true
+        "skipMetadataEmit": false
     },
     "include": [
         "src/**/*"

@@ -1,5 +1,4 @@
 import uglify from 'rollup-plugin-uglify';
-import { minify } from 'uglify-es';
 
 export default {
     entry: 'bundles/index.js',
@@ -8,7 +7,6 @@ export default {
     treeshake: true,
     moduleName: 'ng2Completer',
     sourceMap: true,
-    exports: 'named',
     onwarn: function (warning) {
         // Suppress this error message... there are hundreds of them. Angular team says to ignore it.
         // https://github.com/rollup/rollup/wiki/Troubleshooting#this-is-undefined
@@ -16,25 +14,37 @@ export default {
             return;
         },
     plugins: [
-        uglify({},minify)
+        uglify()
     ],
     globals: {
         '@angular/core': 'ng.core',
         '@angular/common': 'ng.common',
         '@angular/compiler': 'ng.compiler',
         '@angular/forms': 'ng.forms',
+        '@angular/http': 'ng.http',
         '@angular/platform-browser': 'ng.platformBrowser',
         '@angular/platform-browser-dynamic': 'ng.platformBrowserDynamic',
+        'rxjs/Subject': 'Rx',
+        'rxjs/observable/PromiseObservable': 'Rx',
+        'rxjs/operator/toPromise': 'Rx.Observable.prototype',
         'rxjs/Observable': 'Rx',
-        'rxjs/Rx': 'Rx'
+        'rxjs/Rx': 'Rx',
+        'rxjs/add/operator/map': 'Rx.Operator.map',
+        'rxjs/add/operator/catch': 'Rx.Operator.catch'
+
     },
     external: [
         '@angular/core',
         '@angular/common',
         '@angular/compiler',
         '@angular/forms',
+        '@angular/http',
         '@angular/platform-browser',
         '@angular/platform-browser-dynamic',
-        'rxjs/Observable'
+        'rxjs/Subject',
+        'rxjs/observable/PromiseObservable',
+        'rxjs/operator/toPromise',
+        'rxjs/Observable',
+        'rxjs/Rx'
     ]
 }
