@@ -1,5 +1,0 @@
-{
-  "main": "ng2-completer.umd.js",
-  "module": "index.js",
-  "typings": "index.d.ts"
-}

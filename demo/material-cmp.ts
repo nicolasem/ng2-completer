@@ -1,7 +1,7 @@
 "use strict";
 import { Component } from "@angular/core";
 
-import { CompleterService, CompleterData } from "../src";
+import { CompleterService, CompleterData } from "../src/ng2-completer";
 
 let template = require("./material-cmp.html");
 let style = require("./material-cmp.css");

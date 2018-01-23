@@ -11,12 +11,14 @@ import { MAX_CHARS, MIN_SEARCH_LENGTH, PAUSE, TEXT_SEARCHING, TEXT_NO_RESULTS, i
 
 import "rxjs/add/operator/catch";
 
-const noop = () => { };
+const noop = () => {
+    return;
+};
 
 const COMPLETER_CONTROL_VALUE_ACCESSOR = {
+    multi: true,
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => CompleterCmp),
-    multi: true
 };
 
 
@@ -24,13 +26,16 @@ const COMPLETER_CONTROL_VALUE_ACCESSOR = {
     selector: "ng2-completer",
     template: `
         <div class="completer-holder" ctrCompleter>
-            <input #ctrInput [attr.id]="inputId.length > 0 ? inputId : null" type="search" class="completer-input" ctrInput [ngClass]="inputClass"
-                [(ngModel)]="searchStr" (ngModelChange)="onChange($event)" [attr.name]="inputName" [placeholder]="placeholder"
+            <input #ctrInput [attr.id]="inputId.length > 0 ? inputId : null" type="search"
+                class="completer-input" ctrInput [ngClass]="inputClass"
+                [(ngModel)]="searchStr" (ngModelChange)="onChange($event)"
+                [attr.name]="inputName" [placeholder]="placeholder"
                 [attr.maxlength]="maxChars" [tabindex]="fieldTabindex" [disabled]="disableInput"
                 [clearSelected]="clearSelected" [clearUnselected]="clearUnselected"
-                [overrideSuggested]="overrideSuggested" [openOnFocus]="openOnFocus" [fillHighlighted]="fillHighlighted" 
+                [overrideSuggested]="overrideSuggested" [openOnFocus]="openOnFocus" [fillHighlighted]="fillHighlighted"
                 [openOnClick]="openOnClick" [selectOnClick]="selectOnClick" [selectOnFocus]="selectOnFocus"
-                (blur)="onBlur()" (focus)="onFocus()" (keyup)="onKeyup($event)" (keydown)="onKeydown($event)" (click)="onClick($event)"
+                (blur)="onBlur()" (focus)="onFocus()" (keyup)="onKeyup($event)"
+                (keydown)="onKeydown($event)" (click)="onClick($event)"
                 autocomplete="off" autocorrect="off" autocapitalize="off" />
 
             <div class="completer-dropdown-holder"
@@ -46,18 +51,24 @@ const COMPLETER_CONTROL_VALUE_ACCESSOR = {
                     let searchActive = searching;
                     let isInitialized = searchInitialized;
                     let isOpen = isOpen;">
-                <div class="completer-dropdown" ctrDropdown *ngIf="isInitialized && isOpen && (( items?.length > 0|| (displayNoResults && !searchActive)) || (searchActive && displaySearching))">
-                    <div *ngIf="searchActive && displaySearching" class="completer-searching">{{_textSearching}}</div>
-                    <div *ngIf="!searchActive && (!items || items?.length === 0)" class="completer-no-results">{{_textNoResults}}</div>
+                <div class="completer-dropdown" ctrDropdown 
+                    *ngIf="isInitialized && isOpen && (( items?.length > 0|| (displayNoResults && !searchActive)) || (searchActive && displaySearching))">
+                    <div *ngIf="searchActive && displaySearching" class="completer-searching">{{ _textSearching }}</div>
+                    <div *ngIf="!searchActive && (!items || items?.length === 0)"
+                    class="completer-no-results">{{ _textNoResults }}</div>
                     <div class="completer-row-wrapper" *ngFor="let item of items; let rowIndex=index">
                         <div class="completer-row" [ctrRow]="rowIndex" [dataItem]="item">
                             <div *ngIf="item.image || item.image === ''" class="completer-image-holder">
                                 <img *ngIf="item.image != ''" src="{{item.image}}" class="completer-image" />
                                 <div *ngIf="item.image === ''" class="completer-image-default"></div>
                             </div>
-                            <div class="completer-item-text" [ngClass]="{'completer-item-text-image': item.image || item.image === '' }">
-                                <completer-list-item class="completer-title" [text]="item.title" [matchClass]="matchClass" [searchStr]="searchStr" [type]="'title'"></completer-list-item>
-                                <completer-list-item *ngIf="item.description && item.description != ''" class="completer-description" [text]="item.description"
+                            <div class="completer-item-text"
+                            [ngClass]="{'completer-item-text-image': item.image || item.image === '' }">
+                                <completer-list-item
+                                class="completer-title" [text]="item.title" [matchClass]="matchClass"
+                                [searchStr]="searchStr" [type]="'title'"></completer-list-item>
+                                <completer-list-item *ngIf="item.description && item.description != ''"
+                                class="completer-description" [text]="item.description"
                                     [matchClass]="matchClass" [searchStr]="searchStr" [type]="'description'">
                                 </completer-list-item>
                             </div>
@@ -230,21 +241,21 @@ export class CompleterCmp implements OnInit, ControlValueAccessor, AfterViewChec
     }
 
     @Input()
-    public set datasource(source: CompleterData | string | Array<any>) {
+    public set datasource(source: CompleterData | string | any[]) {
         if (source) {
             if (source instanceof Array) {
                 this.dataService = this.completerService.local(source);
             } else if (typeof (source) === "string") {
                 this.dataService = this.completerService.remote(source);
             } else {
-                this.dataService = source;
+                this.dataService = source as CompleterData;
             }
         }
     }
 
     @Input()
     public set textNoResults(text: string) {
-        if (this._textNoResults != text) {
+        if (this._textNoResults !== text) {
             this._textNoResults = text;
             this.displayNoResults = !!this._textNoResults && this._textNoResults !== "false";
         }
@@ -252,7 +263,7 @@ export class CompleterCmp implements OnInit, ControlValueAccessor, AfterViewChec
 
     @Input()
     public set textSearching(text: string) {
-        if (this._textSearching != text) {
+        if (this._textSearching !== text) {
             this._textSearching = text;
             this.displaySearching = !!this._textSearching && this._textSearching !== "false";
         }

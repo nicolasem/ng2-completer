@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Directive, EmbeddedViewRef, Host, Input, OnInit, TemplateRef, ViewContainerRef } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 import { timer } from "rxjs/observable/timer";
-import { take } from "rxjs/operators";
+import { catchError, take } from "rxjs/operators";
 
 import { CtrCompleter, CompleterList } from "./ctr-completer";
 import { CompleterData } from "../services/completer-data";
@@ -181,12 +181,13 @@ export class CtrList implements OnInit, CompleterList {
 
     private dataServiceSubscribe() {
         if (this._dataService) {
-            this._dataService
-                .catch(err => {
+            this._dataService.pipe(
+                catchError(err => {
                     console.error(err);
                     console.error("Unexpected error in dataService: errors should be handled by the dataService Observable");
                     return [];
                 })
+            )
                 .subscribe(results => {
                     this.ctx.searchInitialized = true;
                     this.ctx.searching = false;

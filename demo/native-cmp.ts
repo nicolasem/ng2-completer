@@ -4,7 +4,13 @@ import { Component, ViewChild } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 import { from } from "rxjs/observable/from";
 
-import { CompleterCmp, CompleterData, CompleterService, CompleterItem, RemoteData } from "../src";
+import {
+    CompleterCmp,
+    CompleterData,
+    CompleterService,
+    CompleterItem,
+    RemoteData
+} from "../src/ng2-completer";
 import { CustomData } from "./custom-data";
 import { HttpClient } from "@angular/common/http";
 
@@ -99,14 +105,14 @@ export class NativeCmp {
             null,
             "title",
             "title");
-        this.dataRemote2.urlFormater(term => {
+        this.dataRemote2.urlFormater((term: any) => {
             return `https://api.themoviedb.org/3/search/movie?api_key=36bf560f8967672b5e428038340f0065&language=en-US&query=${term}&page=1&include_adult=false`;
         });
         this.dataRemote2.dataField("results");
         // For async local the source can also be HTTP request
         // let source = http.get("https://raw.githubusercontent.com/oferh/ng2-completer/master/demo/res/data/countries.json?").map((res: any) => res.json());
-        let source = from([this.countries]).delay(3000);
-        this.dataService3 = completerService.local(<Observable<any[]>>source, "name", "name");
+        const source = from([this.countries]).delay(3000);
+        this.dataService3 = completerService.local(source, "name", "name");
         this.customData = new CustomData(http);
         this.dataService4 = completerService.local(this.colors, null, null);
     }

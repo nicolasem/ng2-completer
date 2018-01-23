@@ -9,18 +9,17 @@ import { CompleterItem } from "../components/completer-item";
 export class RemoteData extends CompleterBaseData {
     public dataSourceChange: EventEmitter<void> = new EventEmitter<void>();
 
-    private _remoteUrl: string;
+    private _remoteUrl: string | null;
     private remoteSearch: Subscription;
     private _urlFormater: ((term: string) => string) | null = null;
     private _dataField: string | null = null;
     private _requestOptions: any;
 
-
     constructor(private http: HttpClient) {
         super();
     }
 
-    public remoteUrl(remoteUrl: string) {
+    public remoteUrl(remoteUrl: string | null) {
         this._remoteUrl = remoteUrl;
         this.dataSourceChange.emit();
 
@@ -53,13 +52,13 @@ export class RemoteData extends CompleterBaseData {
             .get(url, Object.assign({}, this._requestOptions))
             .pipe(
                 map((data: any) => {
-                    let matches = this.extractValue(data, this._dataField);
+                    const matches = this.extractValue(data, this._dataField);
                     return this.extractMatches(matches, term);
                 }),
                 catchError(() => [])
             )
             .subscribe((matches: any[]) => {
-                let results = this.processResults(matches);
+                const results = this.processResults(matches);
                 this.next(results);
             });
     }

@@ -1,50 +1,44 @@
-import uglify from 'rollup-plugin-uglify';
+import resolve from 'rollup-plugin-node-resolve';
+import sourcemaps from 'rollup-plugin-sourcemaps';
+
+/**
+ * Add here external dependencies that actually you use.
+ * 
+ * About RxJS
+ * Each RxJS functionality that you use in the library must be added as external dependency.
+ * - For main classes use 'Rx':
+ *      e.g. import { Observable } from 'rxjs/Observable'; => 'rxjs/Observable': 'Rx'
+ * - For observable methods use 'Rx.Observable':
+ *      e.g. import 'rxjs/add/observable/merge'; => 'rxjs/add/observable/merge': 'Rx.Observable'
+ *      or for lettable operators:
+ *      e.g. import { merge } from 'rxjs/observable/merge'; => 'rxjs/observable/merge': 'Rx.Observable'
+ * - For operators use 'Rx.Observable.prototype':
+ *      e.g. import 'rxjs/add/operator/map'; => 'rxjs/add/operator/map': 'Rx.Observable.prototype'
+ *      or for lettable operators:
+ *      e.g. import { map } from 'rxjs/operators'; => 'rxjs/operators': 'Rx.Observable.prototype'
+ */
+const globals = {
+    '@angular/core': 'ng.core',
+    '@angular/common': 'ng.common',
+    '@angular/common/http': 'ng.common.http',
+    '@angular/forms': 'ng.forms',
+    'rxjs/Observable': 'Rx',
+    'rxjs/Rx': 'Rx',
+    'rxjs/Subject': 'Rx',
+    'rxjs/Subject': 'Rx',
+    'rxjs/operators': 'Rx.Observable.prototype',
+    'rxjs/observable/timer': 'Rx.Observable',
+};
 
 export default {
-    entry: 'bundles/index.js',
-    dest: 'bundles/ng2-completer.umd.js',
-    format: 'umd',
-    treeshake: true,
-    moduleName: 'ng2Completer',
-    sourceMap: true,
-    onwarn: function (warning) {
-        // Suppress this error message... there are hundreds of them. Angular team says to ignore it.
-        // https://github.com/rollup/rollup/wiki/Troubleshooting#this-is-undefined
-        if (warning.code === 'THIS_IS_UNDEFINED')
-            return;
-        },
-    plugins: [
-        uglify()
-    ],
-    globals: {
-        '@angular/core': 'ng.core',
-        '@angular/common': 'ng.common',
-        '@angular/compiler': 'ng.compiler',
-        '@angular/forms': 'ng.forms',
-        '@angular/http': 'ng.http',
-        '@angular/platform-browser': 'ng.platformBrowser',
-        '@angular/platform-browser-dynamic': 'ng.platformBrowserDynamic',
-        'rxjs/Subject': 'Rx',
-        'rxjs/observable/PromiseObservable': 'Rx',
-        'rxjs/operator/toPromise': 'Rx.Observable.prototype',
-        'rxjs/Observable': 'Rx',
-        'rxjs/Rx': 'Rx',
-        'rxjs/add/operator/map': 'Rx.Operator.map',
-        'rxjs/add/operator/catch': 'Rx.Operator.catch'
-
-    },
-    external: [
-        '@angular/core',
-        '@angular/common',
-        '@angular/compiler',
-        '@angular/forms',
-        '@angular/http',
-        '@angular/platform-browser',
-        '@angular/platform-browser-dynamic',
-        'rxjs/Subject',
-        'rxjs/observable/PromiseObservable',
-        'rxjs/operator/toPromise',
-        'rxjs/Observable',
-        'rxjs/Rx'
-    ]
+    external: Object.keys(globals),
+    plugins: [resolve(), sourcemaps()],
+    onwarn: () => { return },
+    output: {
+        format: 'umd',
+        name: 'ng2.completer',
+        globals: globals,
+        sourcemap: true,
+        exports: 'named'
+    }
 }

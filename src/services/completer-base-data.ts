@@ -6,9 +6,8 @@ import { isNil } from "../globals";
 
 export abstract class CompleterBaseData extends Subject<CompleterItem[] | null> implements CompleterData {
 
-
-    protected _searchFields: string;
-    protected _titleField: string;
+    protected _searchFields: string | null;
+    protected _titleField: string | null;
     protected _descriptionField: string;
     protected _imageField: string;
 
@@ -18,14 +17,16 @@ export abstract class CompleterBaseData extends Subject<CompleterItem[] | null> 
 
     public abstract search(term: string): void;
 
-    public cancel() { }
+    public cancel() {
+        return;
+    }
 
-    public searchFields(searchFields: string) {
+    public searchFields(searchFields: string | null) {
         this._searchFields = searchFields;
         return this;
     }
 
-    public titleField(titleField: string) {
+    public titleField(titleField: string | null) {
         this._titleField = titleField;
         return this;
     }
@@ -68,10 +69,10 @@ export abstract class CompleterBaseData extends Subject<CompleterItem[] | null> 
         }
 
         return {
-            title: formattedText,
             description: formattedDesc,
-            image: image,
-            originalObject: data
+            image,
+            originalObject: data,
+            title: formattedText
         } as CompleterItem;
 
     }
@@ -79,21 +80,28 @@ export abstract class CompleterBaseData extends Subject<CompleterItem[] | null> 
     protected extractMatches(data: any[], term: string) {
         let matches: any[] = [];
         const searchFields = this._searchFields ? this._searchFields.split(",") : null;
-        if (this._searchFields !== null && this._searchFields !== undefined && term != "") {
-            matches = data.filter(item => {
-                const values: any[] = searchFields ? searchFields.map(searchField => this.extractValue(item, searchField)).filter(value => !!value) : [item];
-                return values.some(value => value.toString().toLowerCase().indexOf(term.toString().toLowerCase()) >= 0);
+        if (this._searchFields !== null && this._searchFields !== undefined && term !== "") {
+            matches = data.filter((item) => {
+                const values: any[] = searchFields ? this.extractBySearchFields(searchFields, item) : [item];
+                return values.some((value) => value
+                    .toString()
+                    .toLowerCase()
+                    .indexOf(term.toString().toLowerCase()) >= 0
+                );
             });
         } else {
             matches = data;
         }
-
 
         return matches;
     }
 
     protected extractTitle(item: any) {
         // split title fields and run extractValue for each and join with ' '
+        if (!this._titleField) {
+            return "";
+        }
+
         return this._titleField.split(",")
             .map((field) => {
                 return this.extractValue(item, field);
@@ -107,13 +115,12 @@ export abstract class CompleterBaseData extends Subject<CompleterItem[] | null> 
         if (key) {
             keys = key.split(".");
             result = obj;
-            for (let i = 0; i < keys.length; i++) {
+            for (key of keys) {
                 if (result) {
-                    result = result[keys[i]];
+                    result = result[key];
                 }
             }
-        }
-        else {
+        } else {
             result = obj;
         }
         return result;
@@ -121,7 +128,7 @@ export abstract class CompleterBaseData extends Subject<CompleterItem[] | null> 
 
     protected processResults(matches: string[]): CompleterItem[] {
         let i: number;
-        let results: CompleterItem[] = [];
+        const results: CompleterItem[] = [];
 
         if (matches && matches.length > 0) {
             for (i = 0; i < matches.length; i++) {
@@ -132,5 +139,10 @@ export abstract class CompleterBaseData extends Subject<CompleterItem[] | null> 
             }
         }
         return results;
+    }
+
+    private extractBySearchFields(searchFields: string[], item: any) {
+        return searchFields
+            .map((searchField) => this.extractValue(item, searchField)).filter((value) => !!value);
     }
 }

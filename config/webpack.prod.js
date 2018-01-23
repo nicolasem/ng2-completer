@@ -8,7 +8,7 @@ module.exports = webpackMerge(commonConfig, {
   devtool: 'source-map',
 
   output: {
-    path: helpers.root('dist'),
+    path: helpers.root('dist/demo'),
     publicPath: '/ng2-completer/',
     filename: '[name].[hash].js',
     chunkFilename: '[id].[hash].chunk.js'

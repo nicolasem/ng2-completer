@@ -2,7 +2,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, ViewChild, forwardRef } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
-import { CtrCompleter, CompleterData, CompleterItem } from "../src";
+import { CtrCompleter, CompleterData, CompleterItem } from "../src/ng2-completer";
 import { MAX_CHARS, MIN_SEARCH_LENGTH, PAUSE, TEXT_SEARCHING, TEXT_NO_RESULTS } from "../src/globals";
 
 
