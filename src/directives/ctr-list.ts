@@ -25,6 +25,7 @@ export class CtrList implements OnInit, CompleterList {
     @Input() public ctrListMinSearchLength = MIN_SEARCH_LENGTH;
     @Input() public ctrListPause = PAUSE;
     @Input() public ctrListAutoMatch = false;
+    @Input() public ctrListAutoMatchBy: string;
     @Input() public ctrListAutoHighlight = false;
     @Input() public ctrListDisplaySearching = true;
 
@@ -191,11 +192,17 @@ export class CtrList implements OnInit, CompleterList {
                     this.ctx.searching = false;
                     this.ctx.results = results;
 
-                    if (this.ctrListAutoMatch && results && results.length === 1 && results[0].title && !isNil(this.term) &&
-                        results[0].title.toLocaleLowerCase() === this.term!.toLocaleLowerCase()) {
-                        // Do automatch
-                        this.completer.onSelected(results[0]);
-                        return;
+                    if (this.ctrListAutoMatch && results && results.length === 1 && !isNil(this.term)) {
+                        const result = results[0];
+                        if (this.ctrListAutoMatchBy != null && result.originalObject[this.ctrListAutoMatchBy] === this.term) {
+                            // Do automatch
+                            this.completer.onSelected(result);
+                            return;
+                        } else if (result.title && result.title.toLocaleLowerCase() === this.term!.toLocaleLowerCase()) {
+                            // Do automatch
+                            this.completer.onSelected(result);
+                            return;
+                        }
                     }
 
                     if (this._initialValue) {

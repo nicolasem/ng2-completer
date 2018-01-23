@@ -38,6 +38,7 @@ const COMPLETER_CONTROL_VALUE_ACCESSOR = {
                     minSearchLength: minSearchLength;
                     pause: pause;
                     autoMatch: autoMatch;
+                    autoMatchBy: autoMatchBy;
                     initialValue: initialValue;
                     autoHighlight: autoHighlight;
                     displaySearching: displaySearching;
@@ -131,6 +132,7 @@ export class CompleterCmp implements OnInit, ControlValueAccessor, AfterViewChec
     @Input() public matchClass: string;
     @Input() public fieldTabindex: number;
     @Input() public autoMatch = false;
+    @Input() public autoMatchBy: string;
     @Input() public disableInput = false;
     @Input() public inputClass: string;
     @Input() public autofocus = false;
@@ -167,7 +169,7 @@ export class CompleterCmp implements OnInit, ControlValueAccessor, AfterViewChec
 
     constructor(private completerService: CompleterService, private cdr: ChangeDetectorRef) { }
 
-    public get value(): any { return this.searchStr; };
+    public get value(): any { return this.searchStr; }
 
     public set value(v: any) {
         if (v !== this.searchStr) {
